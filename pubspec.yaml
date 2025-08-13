@@ -15,7 +15,8 @@ dependencies:
   cloud_firestore: ^4.17.5
   firebase_auth: ^4.20.0
   firebase_storage: ^11.6.5
-  js: ^0.7.2 # Explicitly adding and updating the js package
+  image_picker: ^1.1.2
+  device_preview: ^1.1.0 # Add this line for device preview
 
 dev_dependencies:
   flutter_test:
@@ -25,11 +26,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/fonts/ # Keep this line to include the directory
+    - assets/fonts/
+    - assets/images/
   fonts:
     - family: Roboto Serif
       fonts:
         - asset: assets/fonts/RobotoSerif-Regular.ttf
         - asset: assets/fonts/RobotoSerif-Bold.ttf
           style: italic
-          weight: 700 # Assuming this italic variant is bold italic, adjust if needed
+          weight: 700

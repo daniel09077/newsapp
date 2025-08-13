@@ -3,6 +3,7 @@ import 'package:news_app/services/auth_service.dart'; // Import the authenticati
 import 'package:news_app/screens/news_home_page.dart'; // Import NewsHomePage for navigation
 //import 'package:news_app/models/user_role.dart'; // Import UserRole
 import 'package:news_app/models/user_profile.dart'; // Import UserProfile
+import 'package:news_app/screens/register_page.dart'; // Import the RegisterPage
 
 class LoginPage extends StatefulWidget {
   // Updated callback to pass UserProfile instead of Map
@@ -161,6 +162,18 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'Forgot Registration Number?',
                     style: TextStyle(color: Theme.of(context).primaryColor), // Use primary color
+                  ),
+                ),
+                // New: Register button
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: Text(
+                    'Don\'t have an account? Register',
+                    style: TextStyle(color: Theme.of(context).colorScheme.secondary), // Use secondary color or primary
                   ),
                 ),
               ],

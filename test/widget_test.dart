@@ -14,8 +14,8 @@ import 'package:news_app/main.dart'; // Assuming your project name is 'news_app'
 void main() {
   testWidgets('NewsApp renders correctly', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    // Use the correct root widget for your application, which is NewsApp
-    await tester.pumpWidget(const NewsApp());
+    // Use the correct root widget for your application, which is MyApp
+    await tester.pumpWidget(const MyApp()); // Changed from NewsApp to MyApp
 
     // Verify that the AppBar title 'Kaduna Polytechnic' is present
     expect(find.text('Kaduna Polytechnic'), findsOneWidget);

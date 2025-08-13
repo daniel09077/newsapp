@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
-import 'package:news_app/firebase_options.dart'; // Import the generated Firebase options
+import 'package:firebase_core/firebase_core.dart';
+import 'package:news_app/firebase_options.dart'; // Ensure this file exists and is correctly generated
 import 'package:news_app/screens/login_page.dart';
-import 'package:news_app/screens/news_home_page.dart';
+import 'package:news_app/screens/news_home_page.dart'; // Import NewsHomePage
 import 'package:news_app/models/user_profile.dart'; // Import UserProfile
+import 'package:device_preview/device_preview.dart'; // Import device_preview
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter binding is initialized
-  await Firebase.initializeApp( // Initialize Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const NewsApp());
+  runApp(
+    DevicePreview( // Wrap your app with DevicePreview
+      enabled: !const bool.fromEnvironment('dart.vm.product'), // Only enable in debug builds
+      builder: (context) => const MyApp(), // Your app widget
+    ),
+  );
 }
 
-class NewsApp extends StatefulWidget {
-  const NewsApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<NewsApp> createState() => _NewsAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _NewsAppState extends State<NewsApp> {
-  bool _isLoggedIn = false;
-  UserProfile? _loggedInUserProfile; // Now stores the full UserProfile
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-  void _checkLoginStatus() async {
-    // In a real Firebase Auth app, you would check FirebaseAuth.instance.currentUser here.
-    // For now, we'll keep the initial state as logged out until a successful login.
-    setState(() {
-      _isLoggedIn = false;
-      _loggedInUserProfile = null;
-    });
-  }
+class _MyAppState extends State<MyApp> {
+  UserProfile? _loggedInUserProfile; // State to hold the logged-in user's profile
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +49,12 @@ class _NewsAppState extends State<NewsApp> {
     );
 
     return MaterialApp(
-      title: 'Kaduna Polytechnic News',
+      // Add these properties for DevicePreview
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      // End DevicePreview properties
+
+      title: 'Kaduna Polytechnic News App', // Changed title to be more specific
       theme: ThemeData(
         primarySwatch: kptGreen, // Use the custom green as primary color
         scaffoldBackgroundColor: Colors.white, // Set scaffold background to white
@@ -69,14 +64,14 @@ class _NewsAppState extends State<NewsApp> {
           elevation: 0,
         ),
         fontFamily: 'Roboto Serif', // Set the new font family
-        textTheme: const TextTheme( // Adjust default text sizes
+        textTheme: const TextTheme( // Adjust default text sizes for consistency
           displayLarge: TextStyle(fontSize: 57.0),
           displayMedium: TextStyle(fontSize: 45.0),
           displaySmall: TextStyle(fontSize: 36.0),
           headlineLarge: TextStyle(fontSize: 32.0),
           headlineMedium: TextStyle(fontSize: 28.0),
           headlineSmall: TextStyle(fontSize: 24.0),
-          titleLarge: TextStyle(fontSize: 20.0), // Slightly smaller
+          titleLarge: TextStyle(fontSize: 22.0), // Standard for app bar titles
           titleMedium: TextStyle(fontSize: 16.0),
           titleSmall: TextStyle(fontSize: 14.0),
           bodyLarge: TextStyle(fontSize: 16.0),
@@ -88,18 +83,16 @@ class _NewsAppState extends State<NewsApp> {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _isLoggedIn && _loggedInUserProfile != null
-          ? NewsHomePage(
-              userProfile: _loggedInUserProfile!,
-            )
-          : LoginPage(
+      home: _loggedInUserProfile == null
+          ? LoginPage(
               onLoginSuccess: (userProfile) {
                 setState(() {
-                  _isLoggedIn = true;
                   _loggedInUserProfile = userProfile;
                 });
               },
-            ),
+            )
+          : NewsHomePage(userProfile: _loggedInUserProfile!),
+      debugShowCheckedModeBanner: false, // Remove debug banner
     );
   }
 }
